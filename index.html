@@ -131,6 +131,28 @@ tailwind.config = {
 
   .schwarzkopf-img{ opacity:.5; filter:contrast(1.06) saturate(.9); will-change:transform; }
 
+  /* ───────── scholarship closed notice ───────── */
+  .schol-dialog{ border:none; padding:0; max-width:26rem; width:calc(100% - 2rem);
+    border-radius:1.25rem; background:#fff; color:#140E1F;
+    box-shadow:0 32px 64px -24px rgba(20,14,31,.55); }
+  .schol-dialog::backdrop{ background:rgba(20,14,31,.62); backdrop-filter:blur(6px); }
+  .schol-dialog[open]{ animation:scholIn .32s cubic-bezier(.22,1,.36,1) both; }
+  .schol-dialog[open]::backdrop{ animation:scholBd .28s ease both; }
+  @keyframes scholIn{ from{opacity:0;transform:translateY(10px) scale(.97)} to{opacity:1;transform:none} }
+  @keyframes scholBd{ from{opacity:0} to{opacity:1} }
+  .schol-dialog-body{ padding:1.75rem 1.75rem 1.5rem; }
+  .schol-dialog-body h3{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.15rem;
+    letter-spacing:-.02em; line-height:1.3; margin:0 0 .75rem; }
+  .schol-dialog-body p{ margin:0; color:rgba(20,14,31,.72); line-height:1.55; font-size:.98rem; }
+  .schol-dialog-foot{ padding:0 1.75rem 1.5rem; display:flex; justify-content:flex-end; }
+  .schol-dialog-close{ border:none; cursor:pointer; border-radius:999px; background:#7C3AED; color:#fff;
+    font-weight:600; font-size:.9rem; padding:.7rem 1.35rem; transition:background .25s; }
+  .schol-dialog-close:hover{ background:#5B21B6; }
+  .schol-dialog-close:focus-visible{ outline:2px solid #140E1F; outline-offset:3px; }
+  @media(prefers-reduced-motion:reduce){
+    .schol-dialog[open],.schol-dialog[open]::backdrop{ animation:none!important; }
+  }
+
   .grid-faint::before{ content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
     background-image:linear-gradient(rgba(167,139,250,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(167,139,250,.035) 1px,transparent 1px);
     background-size:64px 64px; mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,#000 40%,transparent 100%); }
@@ -771,17 +793,27 @@ tailwind.config = {
         <footer class="mt-3 text-sm text-white/55">— Gen. H Norman Schwarzkopf</footer>
       </blockquote>
       <div class="rv rv-d5 mt-9">
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeY_D3CmX1sCbtlr1kyAoEJrq96qFl2uYNOAf3E_2UEI2CoYg/viewform"
-           target="_blank" rel="noopener"
-           class="inline-flex items-center gap-2 rounded-full bg-white text-ink font-semibold px-7 py-3.5 hover:bg-violet-soft transition-colors cursor-pointer">
+        <button type="button" id="scholOpen"
+           class="inline-flex items-center gap-2 rounded-full bg-white text-ink font-semibold px-7 py-3.5 hover:bg-violet-soft transition-colors cursor-pointer"
+           aria-haspopup="dialog" aria-controls="scholDialog">
           Learn more &amp; apply
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-        </a>
-        <p class="mt-3 text-xs text-white/45">Opens the scholarship application form in a new tab.</p>
+        </button>
+        <p class="mt-3 text-xs text-white/45">Applications for the 2026–27 scholarship are now closed.</p>
       </div>
     </div>
   </div>
 </section>
+
+<dialog id="scholDialog" class="schol-dialog" aria-labelledby="scholDialogTitle">
+  <div class="schol-dialog-body">
+    <h3 id="scholDialogTitle">Thank you for your interest.</h3>
+    <p>Applications are now closed for the 2026-27 scholarship. Winner to be announced soon.</p>
+  </div>
+  <div class="schol-dialog-foot">
+    <button type="button" class="schol-dialog-close" id="scholClose">Got it</button>
+  </div>
+</dialog>
 
 <!-- ═══════════ TAMPA BAY — static banner ═══════════ -->
 <aside id="flyers" class="otw" aria-label="Look for Maxematics around Tampa Bay">
@@ -906,6 +938,27 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     else target.scrollIntoView({ behavior: 'smooth' });
   });
 });
+
+/* ─── Scholarship closed notice ─── */
+{
+  const dlg = document.getElementById('scholDialog');
+  const openBtn = document.getElementById('scholOpen');
+  const closeBtn = document.getElementById('scholClose');
+  if (dlg && openBtn){
+    const open = () => {
+      if (lenis) lenis.stop();
+      dlg.showModal();
+    };
+    const close = () => {
+      dlg.close();
+      if (lenis) lenis.start();
+    };
+    openBtn.addEventListener('click', open);
+    closeBtn?.addEventListener('click', close);
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
+    dlg.addEventListener('close', () => { if (lenis) lenis.start(); });
+  }
+}
 
 /* ─── Scroll-linked parallax ─── */
 if (!reduce){
