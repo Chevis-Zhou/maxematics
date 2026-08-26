@@ -489,8 +489,8 @@
         to reach the top edge and the glass has to clear the credential strip —
         both are vertical constraints. The bulb's glass occupies ~57% of the
         plate's height, so --bulb-h 82vh puts the glass at ~47vh. */
-  --bulb-h: 74vh;
-  --bulb-right: -4%;
+  --bulb-h: 82vh;
+  --bulb-right: 6%;
   --bulb-top: 0vh;
   --bulb-opacity: 1;
 
@@ -623,8 +623,7 @@
    Unlike v4, these are live: the plate is sized in CSS units, so a drag across a
    breakpoint re-lays-out. v4 read its tokens once at boot and kept whatever size
    it started with. */
-@media (max-width:1535px){ :root{ --bulb-h:66vh; --bulb-right:-10%; } }
-@media (max-width:1279px){ :root{ --bulb-h:60vh; --bulb-right:-14%; } }
+@media (max-width:1279px){ :root{ --bulb-h:72vh; --bulb-right:3%; } }
 /* Below ~1024 there is no longer a column to stand the bulb in — the headline is
    already most of the width — so it stops being an object beside the copy and
    becomes light behind it. Two moves, and the opacity is the important one: at
@@ -633,10 +632,10 @@
    right edge is safe because the plate's outer edges are ramped to black, so the
    clip has nothing to show. */
 @media (max-width:1023px){ :root{ --bulb-h:58vh; --bulb-right:-4%; --bulb-opacity:.55; } }
-/* Headline stays nowrap and large; size it off the leftover column so "Success."
-   cannot walk into the glass. Disabled under 1024 where the bulb is atmosphere. */
+/* Title only: keep the bulb where it hangs. Scale the nowrap headline off the
+   column left of the glass so "Success." cannot reach it. */
 @media (min-width:1024px){
-  #top h1{ font-size:clamp(1.45rem, calc((100vw - var(--bulb-h) * .78 - 7.5rem) / 20.5), 3.25rem); }
+  #top h1{ font-size:clamp(1.5rem, calc((94vw - var(--bulb-h) * .63 - 10.5rem) / 17.8), 3.25rem); }
 }
 
 /* Phones get the bulb too — v4's shader gated itself off here and left the hero
