@@ -294,15 +294,22 @@
      every other section — otherwise the two chips float inboard of the page's left and
      right edges and the band reads as a narrower, unrelated element. */
   .otw-row{ display:flex; align-items:center; justify-content:space-between; gap:.2rem;
-    flex-wrap:wrap; max-width:72rem; margin-inline:auto; padding-inline:1.5rem; }
+    flex-wrap:nowrap; max-width:72rem; margin-inline:auto; padding-inline:1.5rem; }
   .otw-word{ font-family:'Sora',sans-serif; font-weight:700; color:#140E1F;
     font-size:clamp(1rem,2.1vw,1.75rem); letter-spacing:-.01em;
     white-space:nowrap; padding:0 1.2rem; }
   .otw-chip{ flex:none; width:clamp(9rem,15vw,16.5rem); height:clamp(2.4rem,4.2vw,4.4rem);
     border-radius:999px; overflow:hidden; background:#F1ECFB; }
-  .otw-chip img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .otw-chip img{ width:100%; height:100%; object-fit:cover; object-position:center 40%; display:block; }
+  /* Phone: the wide capsules cannot sit on one line with the title, and wrapping
+     them under space-between left-aligns a leftover chip. Circles flanking the
+     title keep the same sandwich as desktop without the leftover. */
   @media(max-width:639px){
-    .otw-word{ white-space:normal; text-align:center; padding:.4rem .6rem; }
+    .otw{ padding:.7rem 0; }
+    .otw-row{ justify-content:center; gap:.55rem; padding-inline:1.15rem; }
+    .otw-chip{ width:3.15rem; height:3.15rem; }
+    .otw-word{ flex:0 1 12.5rem; min-width:0; white-space:normal; text-align:center;
+      padding:0; font-size:1.02rem; line-height:1.2; letter-spacing:-.02em; }
   }
 
   /* ═════════ v6 · odometer figures ═════════
@@ -482,8 +489,8 @@
         to reach the top edge and the glass has to clear the credential strip —
         both are vertical constraints. The bulb's glass occupies ~57% of the
         plate's height, so --bulb-h 82vh puts the glass at ~47vh. */
-  --bulb-h: 82vh;
-  --bulb-right: 6%;
+  --bulb-h: 74vh;
+  --bulb-right: -4%;
   --bulb-top: 0vh;
   --bulb-opacity: 1;
 
@@ -616,7 +623,8 @@
    Unlike v4, these are live: the plate is sized in CSS units, so a drag across a
    breakpoint re-lays-out. v4 read its tokens once at boot and kept whatever size
    it started with. */
-@media (max-width:1279px){ :root{ --bulb-h:72vh; --bulb-right:3%; } }
+@media (max-width:1535px){ :root{ --bulb-h:66vh; --bulb-right:-10%; } }
+@media (max-width:1279px){ :root{ --bulb-h:60vh; --bulb-right:-14%; } }
 /* Below ~1024 there is no longer a column to stand the bulb in — the headline is
    already most of the width — so it stops being an object beside the copy and
    becomes light behind it. Two moves, and the opacity is the important one: at
@@ -625,6 +633,11 @@
    right edge is safe because the plate's outer edges are ramped to black, so the
    clip has nothing to show. */
 @media (max-width:1023px){ :root{ --bulb-h:58vh; --bulb-right:-4%; --bulb-opacity:.55; } }
+/* Headline stays nowrap and large; size it off the leftover column so "Success."
+   cannot walk into the glass. Disabled under 1024 where the bulb is atmosphere. */
+@media (min-width:1024px){
+  #top h1{ font-size:clamp(1.45rem, calc((100vw - var(--bulb-h) * .78 - 7.5rem) / 20.5), 3.25rem); }
+}
 
 /* Phones get the bulb too — v4's shader gated itself off here and left the hero
    with nothing in it. Centred behind the copy and dialled back, because at this
